@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  ganache:
+    image: trufflesuite/ganache-cli
+    container_name: AssetTokenization_Ganache
+    networks:
+      - AssetTokenization
+    ports:
+      - "8545:8545"
+    environment:
+      - GAS_LIMIT=10000000
+      - GAS_PRICE=200
+      - NETWORK_ID=5777
+      - MNEMONIC="rich smooth candy cake sugar pudding cream honey maple crumble sweet treat"
+      - VERBOSE=1
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+
+  assettokenization:
+    build: .
+    container_name: AssetTokenization_Castells
+    networks:
+      - AssetTokenization
+    volumes:
+      - .:/app
+    command: /bin/sh
+    depends_on:
+      - ganache
+
+  slither:
+    build:
+      context: .
+      dockerfile: Dockerfile.slither
+    container_name: AssetTokenization_Slither
+    networks:
+      - AssetTokenization
+    volumes:
+      - .:/slither
+
+networks:
+  AssetTokenization:
+    driver: bridge

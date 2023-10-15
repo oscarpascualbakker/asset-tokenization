@@ -1,0 +1,6 @@
+.env
+images/
+node_modules/
+build/
+deployed/
+metadata/

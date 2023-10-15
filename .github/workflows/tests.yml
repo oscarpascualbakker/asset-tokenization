@@ -1,0 +1,56 @@
+name: Tests and Slither
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the code from the repository
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Install project dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Build and start the Docker environment
+    # Wait 10 seconds for ganache to be ready
+    - name: Build environment
+      run: |
+       docker compose up -d
+       sleep 10
+
+    # Run unit tests (forcing compilation)
+    - name: Run tests
+      run: |
+       docker compose run --rm --user root assettokenization mkdir -p /app/build
+       docker compose run --rm assettokenization chown -R node:node /app/build
+       docker compose run --rm assettokenization truffle test --compile-all
+
+    # Execute Slither for smart contract analysis
+    - name: Run Slither
+      run: |
+       docker compose run --rm slither slither . --exclude-dependencies --exclude-informational --exclude-low --exclude-optimization || echo "SLITHER_EXIT_CODE=$?" >> $GITHUB_ENV
+
+    # Check the exit code of the Slither command
+    - name: Check Slither output
+      run: |
+       SLITHER_EXIT_CODE=${SLITHER_EXIT_CODE:-0}
+
+       if [ -z "$SLITHER_EXIT_CODE" ]; then
+         echo "SLITHER_EXIT_CODE is not set or is empty"
+       else
+         if [ "$SLITHER_EXIT_CODE" -ne 0 ]; then
+           exit 1
+         fi
+       fi
+
+    # Archive Slither results if the job fails
+    - name: Archive Slither results on failure
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: slither-results
+        path: slither-results.txt

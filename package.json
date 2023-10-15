@@ -1,0 +1,28 @@
+{
+  "name": "assettokenization",
+  "version": "1.0.0",
+  "description": "Asset Tokenization",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "keywords": [
+    "assets",
+    "asset",
+    "tokenization"
+  ],
+  "author": "Oscar Pascual",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3",
+    "@truffle/contract": "^4.6.28",
+    "@truffle/hdwallet-provider": "^2.1.15",
+    "chai": "^4.3.7",
+    "dotenv": "^16.3.1",
+    "truffle-assertions": "^0.9.2",
+    "truffle-plugin-verify": "^0.6.5"
+  }
+}

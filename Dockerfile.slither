@@ -1,0 +1,24 @@
+FROM python:3.8
+
+# Download slither code
+RUN git clone https://github.com/crytic/slither.git
+
+# Install slither
+WORKDIR /slither
+RUN python3 setup.py install
+
+# Install node, npm and npx
+RUN apt-get update
+RUN apt-get install -y curl dirmngr apt-transport-https lsb-release ca-certificates
+RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+RUN sh -c 'echo "deb https://deb.nodesource.com/node_18.x $(lsb_release -sc) main" > /etc/apt/sources.list.d/nodesource.list'
+RUN apt-get update
+RUN apt-get install nodejs
+
+# Install Truffle globally
+RUN npm install -g truffle
+
+# Install Truffle tools
+RUN npm install @truffle/hdwallet-provider truffle-plugin-verify truffle-assertions
+RUN npm install @openzeppelin/contracts
+RUN npm install chai dotenv
