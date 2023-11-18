@@ -50,7 +50,7 @@ To install and use this contract, follow these steps:
 1. Clone the repository:
 
    ```
-   git clone https://github.com/oscarpascualbakker/loyalty-program.git
+   git clone https://github.com/oscarpascualbakker/asset-tokenization.git
    ```
 
 2. Build the project:
@@ -74,7 +74,7 @@ truffle test
 If called through a Docker container:
 
 ```
-docker compose run --rm loyalty truffle test
+docker compose run --rm assettokenization truffle test
 ```
 
 For static code analysis, you can use Slither:
